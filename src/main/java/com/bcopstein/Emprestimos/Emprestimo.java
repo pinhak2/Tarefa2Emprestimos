@@ -104,4 +104,30 @@ public class Emprestimo {
     public double valorParcela() {
         return custoTotal() / getNroParcelas();
     }
+
+    public void setSegurado(boolean segurado) {
+        this.segurado = segurado;
+    }
+
+    public void setJurosCompostos(boolean jurosCompostos) {
+        this.jurosCompostos = jurosCompostos;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    public void setTaxa(double taxa) {
+        this.taxa = taxa;
+    }
+
+    public void setNroParcelas(int nroParcelas) {
+        this.nroParcelas = nroParcelas;
+    }
+
+    public void setCalculoDeJuros(CalculoDeJuros calculoDeJuros) {
+        this.calculoDeJuros = calculoDeJuros;
+    }
+
+    
 }
