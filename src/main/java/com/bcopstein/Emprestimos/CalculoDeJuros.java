@@ -27,6 +27,10 @@ public class CalculoDeJuros {
     }
 
     public double jurosEmprestimoJurosSimples(double valor, double taxa, int nroParcelas) {
+        if(valor <= 0 || taxa < 0 || nroParcelas <= 0){
+            System.out.println("\n The Value is invalid: " + valor);
+            throw  new IllegalArgumentException("\nInvalid param!");
+        }
         if (comSeguro) {
             return (valor * (taxa + txSeguro) * nroParcelas);
         } else {
@@ -35,6 +39,10 @@ public class CalculoDeJuros {
     }
 
     public double jurosEmprestimoJurosCompostos(double valor, double taxa, int nroParcelas) {
+        if(valor <= 0 || taxa < 0 || nroParcelas <= 0){
+            System.out.println("\n The Value is invalid: " + valor);
+            throw  new IllegalArgumentException("\nInvalid param!");
+        }
         double tx = taxa;
         if (comSeguro){
             tx += txSeguro;

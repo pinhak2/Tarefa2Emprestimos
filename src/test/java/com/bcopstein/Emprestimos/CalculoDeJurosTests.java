@@ -19,19 +19,11 @@ public class CalculoDeJurosTests {
     @ParameterizedTest
     @CsvSource({
             "1000, 0.032, 10",
-            "1000, -0.032, 10",
             "1000, 0, 10",
             "1000, 0.032, 1",
-            "1000, 0.032, 0",
-            "1000, 0.032, -1",
-            "-1000, 0.032, 10",
-            "0, 0.032, 10",
+            "100, 0.032, 10",
     })
-    void jurosSimplesComSeguro(double valor, double taxa, int nroParcelas) {
-        if ((valor < 0 || taxa < 0 || nroParcelas < 0)) {
-            System.out.println("\n Valor negativo inserido!");
-            return;
-        }
+    void shouldBeEqualJurosSimplesComSeguro(double valor, double taxa, int nroParcelas) {
         double txSeguro = calculoDeJuros.getTaxaSeguro();
         double expected = (valor * (taxa + txSeguro) * nroParcelas);
         double result = calculoDeJuros.jurosEmprestimoJurosSimples(valor, taxa, nroParcelas);
@@ -40,20 +32,24 @@ public class CalculoDeJurosTests {
 
     @ParameterizedTest
     @CsvSource({
-            "1000, 0.032, 10",
             "1000, -0.032, 10",
-            "1000, 0, 10",
-            "1000, 0.032, 1",
             "1000, 0.032, 0",
             "1000, 0.032, -1",
             "-1000, 0.032, 10",
             "0, 0.032, 10",
     })
-    void jurosSimplesSemSeguro(double valor, double taxa, int nroParcelas) {
-        if ((valor < 0 || taxa < 0 || nroParcelas < 0)) {
-            System.out.println("\n Valor negativo inserido!");
-            return;
-        }
+    void shouldThrowExceptionJurosSimplesComSeguro(double valor, double taxa, int nroParcelas) {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> calculoDeJuros.jurosEmprestimoJurosSimples(valor, taxa, nroParcelas));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1000, 0.032, 10",
+            "1000, 0, 10",
+            "1000, 0.032, 1",
+            "100, 0.032, 10",
+    })
+    void shouldBeEqualJurosSimplesSemSeguro(double valor, double taxa, int nroParcelas) {
         calculoDeJuros.setSeguro(false);
         double expected = (valor * taxa * nroParcelas);
         double result = calculoDeJuros.jurosEmprestimoJurosSimples(valor, taxa, nroParcelas);
@@ -62,28 +58,25 @@ public class CalculoDeJurosTests {
 
     @ParameterizedTest
     @CsvSource({
-            "1000, 0.032, 10",
             "1000, -0.032, 10",
-            "1000, 0, 10",
-            "1000, 0.032, 1",
             "1000, 0.032, 0",
             "1000, 0.032, -1",
             "-1000, 0.032, 10",
             "0, 0.032, 10",
     })
-    void jurosCompostoComSeguro(double valor, double taxa, int nroParcelas) {
-        if(valor <= 0){
-            System.out.println("\n The Value is invalid: " + valor);
-            return;
-        }
-        if(taxa < 0){
-            System.out.println("\n The Tax value is invalid:  " + taxa);
-            return;
-        }
-        if(nroParcelas <= 0){
-            System.out.println("\n The number of payments is invalid:  " + nroParcelas );
-            return;
-        }
+    void shouldThrowExceptionJurosSimplesSemSeguro(double valor, double taxa, int nroParcelas) {
+        calculoDeJuros.setSeguro(false);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> calculoDeJuros.jurosEmprestimoJurosSimples(valor, taxa, nroParcelas));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1000, 0.032, 10",
+            "1000, 0, 10",
+            "1000, 0.032, 1",
+            "100, 0.032, 10",
+    })
+    void shouldBeEqualJurosCompostoComSeguro(double valor, double taxa, int nroParcelas) {
         double result = calculoDeJuros.jurosEmprestimoJurosCompostos(valor, taxa, nroParcelas);
         double txSeguro = calculoDeJuros.getTaxaSeguro() + taxa;
         double valorAcum = valor;
@@ -99,28 +92,24 @@ public class CalculoDeJurosTests {
 
     @ParameterizedTest
     @CsvSource({
-            "1000, 0.032, 10",
             "1000, -0.032, 10",
-            "1000, 0, 10",
-            "1000, 0.032, 1",
             "1000, 0.032, 0",
             "1000, 0.032, -1",
             "-1000, 0.032, 10",
             "0, 0.032, 10",
     })
-    void jurosCompostoSemSeguro(double valor, double taxa, int nroParcelas) {
-        if(valor <= 0){
-            System.out.println("\n The Value is invalid: " + valor);
-            return;
-        }
-        if(taxa < 0){
-            System.out.println("\n The Tax value is invalid:  " + taxa);
-            return;
-        }
-        if(nroParcelas <= 0){
-            System.out.println("\n The number of payments is invalid:  " + nroParcelas );
-            return;
-        }
+    void shouldThrowExceptionJurosCompostoComSeguro(double valor, double taxa, int nroParcelas) {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> calculoDeJuros.jurosEmprestimoJurosCompostos(valor, taxa, nroParcelas));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1000, 0.032, 10",
+            "1000, 0, 10",
+            "1000, 0.032, 1",
+            "100, 0.032, 10",
+    })
+    void shouldBeEqualJurosCompostoSemSeguro(double valor, double taxa, int nroParcelas) {
         calculoDeJuros.setSeguro(false);
         double result = calculoDeJuros.jurosEmprestimoJurosCompostos(valor, taxa, nroParcelas);
         double tx = taxa;
@@ -133,5 +122,18 @@ public class CalculoDeJurosTests {
         double expected = valorAcum - valor;
 
         Assertions.assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1000, -0.032, 10",
+            "1000, 0.032, 0",
+            "1000, 0.032, -1",
+            "-1000, 0.032, 10",
+            "0, 0.032, 10",
+    })
+    void shouldThrowExceptionJurosCompostoSemSeguro(double valor, double taxa, int nroParcelas) {
+        calculoDeJuros.setSeguro(false);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> calculoDeJuros.jurosEmprestimoJurosCompostos(valor, taxa, nroParcelas));
     }
 }
