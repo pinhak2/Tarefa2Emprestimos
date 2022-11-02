@@ -1,14 +1,12 @@
 package com.bcopstein.Emprestimos;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.mockito.Mockito.when;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
@@ -28,17 +26,36 @@ public class EmprestimoTest {
 
     @ParameterizedTest
     @CsvSource({
-        "1000,0.032,10"
+        "1000.0,0.032,10,1480.0"
     })
-    void custoTotalComSeguro(double valor, double taxa, int parcelas) {
+    void custoTotalComSeguroSimples(double valor, double taxa, int parcelas, double resultado) {
         emprestimo.setValor(valor);
         emprestimo.setTaxa(taxa);
         emprestimo.setNroParcelas(parcelas);
         emprestimo.setSegurado(true);
+        emprestimo.setJurosCompostos(false);
 
+        when(calculoJuros.jurosEmprestimoJurosSimples(valor, taxa, parcelas))
+            .thenReturn(420.0);
         double valorObtido = emprestimo.custoTotal();
-        double valorEsperado = 1060.0;
-        Assertions.assertEquals(valorEsperado, valorObtido);
+        Assertions.assertEquals(resultado, valorObtido);
     }
 
+    @Disabled
+    @ParameterizedTest
+    @CsvSource({
+        "1000.0,0.032,10,1060.0"
+    })
+    void custoTotalComSeguroComposto(double valor, double taxa, int parcelas, double resultado) {
+        emprestimo.setValor(valor);
+        emprestimo.setTaxa(taxa);
+        emprestimo.setNroParcelas(parcelas);
+        emprestimo.setSegurado(true);
+        emprestimo.setJurosCompostos(true);
+
+
+        double valorObtido = emprestimo.custoTotal();
+        double valorEsperado = resultado;
+        Assertions.assertEquals(valorEsperado, valorObtido);
+    }
 }
