@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -22,12 +23,14 @@ public class EmprestimoControllerTest {
     @Test
     void JurosSimplesEndpointTeste() throws Exception {
         mvc.perform(get("/emprestimo/jurosSimples?valor=1000&parcelas=10&taxa=0.032"))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     void JurosCompostosEndpointTeste() throws Exception {
         mvc.perform(get("/emprestimo/jurosSimples?valor=1000&parcelas=10&taxa=0.032"))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
