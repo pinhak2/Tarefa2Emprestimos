@@ -28,7 +28,7 @@ public class EmprestimoTest {
     @CsvSource({
         "1000.0,0.032,10,1480.0"
     })
-    void custoTotalComSeguroSimples(double valor, double taxa, int parcelas, double resultado) {
+    void custoTotalComSeguroSimples(double valor, double taxa, int parcelas, double valorEsperado) {
         emprestimo.setValor(valor);
         emprestimo.setTaxa(taxa);
         emprestimo.setNroParcelas(parcelas);
@@ -38,24 +38,65 @@ public class EmprestimoTest {
         when(calculoJuros.jurosEmprestimoJurosSimples(valor, taxa, parcelas))
             .thenReturn(420.0);
         double valorObtido = emprestimo.custoTotal();
-        Assertions.assertEquals(resultado, valorObtido);
+        Assertions.assertEquals(valorEsperado, valorObtido);
     }
 
-    @Disabled
+
+    // @Disabled
     @ParameterizedTest
     @CsvSource({
-        "1000.0,0.032,10,1060.0"
+        "1000.0,0.032,10,1216.8958131151653"
     })
-    void custoTotalComSeguroComposto(double valor, double taxa, int parcelas, double resultado) {
+    void custoTotalComSeguroCompostos(double valor, double taxa, int parcelas, double valorEsperado) {
         emprestimo.setValor(valor);
         emprestimo.setTaxa(taxa);
         emprestimo.setNroParcelas(parcelas);
         emprestimo.setSegurado(true);
         emprestimo.setJurosCompostos(true);
 
+        when(calculoJuros.jurosEmprestimoJurosCompostos(valor, taxa, parcelas))
+        .thenReturn(156.8958131151653);
 
         double valorObtido = emprestimo.custoTotal();
-        double valorEsperado = resultado;
+        Assertions.assertEquals(valorEsperado, valorObtido);
+    }
+
+    // @Disabled
+    @ParameterizedTest
+    @CsvSource({
+        "1000.0,0.032,10,1380.0"
+    })
+    void custoTotalSemSeguroSimples(double valor, double taxa, int parcelas, double valorEsperado) {
+        emprestimo.setValor(valor);
+        emprestimo.setTaxa(taxa);
+        emprestimo.setNroParcelas(parcelas);
+        emprestimo.setSegurado(false);
+        emprestimo.setJurosCompostos(false);
+
+        when(calculoJuros.jurosEmprestimoJurosSimples(valor, taxa, parcelas))
+        .thenReturn(320.0);
+
+        
+        double valorObtido = emprestimo.custoTotal();
+        Assertions.assertEquals(valorEsperado, valorObtido);
+    }
+    
+    // @Disabled
+    @ParameterizedTest
+    @CsvSource({
+        "1000.0,0.032,10,1203.0241046335645"
+    })
+    void custoTotalSemSeguroCompostos(double valor, double taxa, int parcelas, double valorEsperado) {
+        emprestimo.setValor(valor);
+        emprestimo.setTaxa(taxa);
+        emprestimo.setNroParcelas(parcelas);
+        emprestimo.setSegurado(false);
+        emprestimo.setJurosCompostos(true);
+
+        when(calculoJuros.jurosEmprestimoJurosCompostos(valor, taxa, parcelas))
+        .thenReturn(143.02410463356463);
+
+        double valorObtido = emprestimo.custoTotal();
         Assertions.assertEquals(valorEsperado, valorObtido);
     }
 }
