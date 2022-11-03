@@ -90,7 +90,14 @@ public class Emprestimo {
         return nroParcelas;
     }
 
+    public CalculoDeJuros getCalculoDeJuros() {
+        return calculoDeJuros;
+    }
+
+
+
     public double custoTotal() {
+        calculoDeJuros.setSeguro(isSegurado());
         double valorIof = valor * IOF;
         if (this.isJurosCompostos()) {
             return valor + valorIof
